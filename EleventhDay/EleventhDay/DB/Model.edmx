@@ -1,0 +1,446 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище Model" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Buildings">
+          <Key>
+            <PropertyRef Name="Kadastr" />
+          </Key>
+          <Property Name="Kadastr" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Land" Type="float" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="Year" Type="smallint" Nullable="false" />
+          <Property Name="Material" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Wear" Type="tinyint" Nullable="false" />
+          <Property Name="Flow" Type="tinyint" Nullable="false" />
+          <Property Name="Picture" Type="image" Nullable="false" />
+          <Property Name="Comment" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="Chiefs">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="Experience" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Departments">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Boss" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Phone" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="OfficeDean" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="ChiefID" Type="int" Nullable="false" />
+          <Property Name="UnitID" Type="int" Nullable="false" />
+          <Property Name="DateStart" Type="datetime" Nullable="false" />
+          <Property Name="Cost" Type="decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="CostYear" Type="smallint" Nullable="false" />
+          <Property Name="CostAfter" Type="decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="Period" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Halls">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Square" Type="float" Nullable="false" />
+          <Property Name="Windows" Type="int" Nullable="false" />
+          <Property Name="Heating" Type="int" Nullable="false" />
+          <Property Name="Target" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="DepartmentID" Type="int" Nullable="false" />
+          <Property Name="BuildingID" Type="int" Nullable="false" />
+          <Property Name="ChiefID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Units">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Departments_Chiefs">
+          <End Role="Chiefs" Type="Self.Chiefs" Multiplicity="1" />
+          <End Role="Departments" Type="Self.Departments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chiefs">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Departments">
+              <PropertyRef Name="ChiefID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Departments_Units">
+          <End Role="Units" Type="Self.Units" Multiplicity="1" />
+          <End Role="Departments" Type="Self.Departments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Units">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Departments">
+              <PropertyRef Name="UnitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Halls_Buildings">
+          <End Role="Buildings" Type="Self.Buildings" Multiplicity="1" />
+          <End Role="Halls" Type="Self.Halls" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Buildings">
+              <PropertyRef Name="Kadastr" />
+            </Principal>
+            <Dependent Role="Halls">
+              <PropertyRef Name="BuildingID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Halls_Chiefs">
+          <End Role="Chiefs" Type="Self.Chiefs" Multiplicity="1" />
+          <End Role="Halls" Type="Self.Halls" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chiefs">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Halls">
+              <PropertyRef Name="ChiefID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Halls_Departments">
+          <End Role="Departments" Type="Self.Departments" Multiplicity="1" />
+          <End Role="Halls" Type="Self.Halls" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departments">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Halls">
+              <PropertyRef Name="DepartmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище ModelContainer">
+          <EntitySet Name="Buildings" EntityType="Self.Buildings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Chiefs" EntityType="Self.Chiefs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Departments" EntityType="Self.Departments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Halls" EntityType="Self.Halls" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Units" EntityType="Self.Units" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Departments_Chiefs" Association="Self.FK_Departments_Chiefs">
+            <End Role="Chiefs" EntitySet="Chiefs" />
+            <End Role="Departments" EntitySet="Departments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Departments_Units" Association="Self.FK_Departments_Units">
+            <End Role="Units" EntitySet="Units" />
+            <End Role="Departments" EntitySet="Departments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Halls_Buildings" Association="Self.FK_Halls_Buildings">
+            <End Role="Buildings" EntitySet="Buildings" />
+            <End Role="Halls" EntitySet="Halls" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Halls_Chiefs" Association="Self.FK_Halls_Chiefs">
+            <End Role="Chiefs" EntitySet="Chiefs" />
+            <End Role="Halls" EntitySet="Halls" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Halls_Departments" Association="Self.FK_Halls_Departments">
+            <End Role="Departments" EntitySet="Departments" />
+            <End Role="Halls" EntitySet="Halls" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="Entity" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Buildings" EntityType="Model.Buildings" />
+          <EntitySet Name="Chiefs" EntityType="Model.Chiefs" />
+          <EntitySet Name="Departments" EntityType="Model.Departments" />
+          <EntitySet Name="Halls" EntityType="Model.Halls" />
+          <EntitySet Name="sysdiagrams" EntityType="Model.sysdiagrams" />
+          <EntitySet Name="Units" EntityType="Model.Units" />
+          <AssociationSet Name="FK_Halls_Buildings" Association="Model.FK_Halls_Buildings">
+            <End Role="Buildings" EntitySet="Buildings" />
+            <End Role="Halls" EntitySet="Halls" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Departments_Chiefs" Association="Model.FK_Departments_Chiefs">
+            <End Role="Chiefs" EntitySet="Chiefs" />
+            <End Role="Departments" EntitySet="Departments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Halls_Chiefs" Association="Model.FK_Halls_Chiefs">
+            <End Role="Chiefs" EntitySet="Chiefs" />
+            <End Role="Halls" EntitySet="Halls" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Departments_Units" Association="Model.FK_Departments_Units">
+            <End Role="Units" EntitySet="Units" />
+            <End Role="Departments" EntitySet="Departments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Halls_Departments" Association="Model.FK_Halls_Departments">
+            <End Role="Departments" EntitySet="Departments" />
+            <End Role="Halls" EntitySet="Halls" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Buildings">
+          <Key>
+            <PropertyRef Name="Kadastr" />
+          </Key>
+          <Property Name="Kadastr" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Land" Type="Double" Nullable="false" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="Year" Type="Int16" Nullable="false" />
+          <Property Name="Material" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Wear" Type="Byte" Nullable="false" />
+          <Property Name="Flow" Type="Byte" Nullable="false" />
+          <Property Name="Picture" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Halls" Relationship="Model.FK_Halls_Buildings" FromRole="Buildings" ToRole="Halls" />
+        </EntityType>
+        <EntityType Name="Chiefs">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="Experience" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Departments" Relationship="Model.FK_Departments_Chiefs" FromRole="Chiefs" ToRole="Departments" />
+          <NavigationProperty Name="Halls" Relationship="Model.FK_Halls_Chiefs" FromRole="Chiefs" ToRole="Halls" />
+        </EntityType>
+        <EntityType Name="Departments">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Boss" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Phone" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="OfficeDean" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="ChiefID" Type="Int32" Nullable="false" />
+          <Property Name="UnitID" Type="Int32" Nullable="false" />
+          <Property Name="DateStart" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Cost" Type="Decimal" Nullable="false" Precision="15" Scale="2" />
+          <Property Name="CostYear" Type="Int16" Nullable="false" />
+          <Property Name="CostAfter" Type="Decimal" Nullable="false" Precision="15" Scale="2" />
+          <Property Name="Period" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Chiefs" Relationship="Model.FK_Departments_Chiefs" FromRole="Departments" ToRole="Chiefs" />
+          <NavigationProperty Name="Units" Relationship="Model.FK_Departments_Units" FromRole="Departments" ToRole="Units" />
+          <NavigationProperty Name="Halls" Relationship="Model.FK_Halls_Departments" FromRole="Departments" ToRole="Halls" />
+        </EntityType>
+        <EntityType Name="Halls">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Square" Type="Double" Nullable="false" />
+          <Property Name="Windows" Type="Int32" Nullable="false" />
+          <Property Name="Heating" Type="Int32" Nullable="false" />
+          <Property Name="Target" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="DepartmentID" Type="Int32" Nullable="false" />
+          <Property Name="BuildingID" Type="Int32" Nullable="false" />
+          <Property Name="ChiefID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Buildings" Relationship="Model.FK_Halls_Buildings" FromRole="Halls" ToRole="Buildings" />
+          <NavigationProperty Name="Chiefs" Relationship="Model.FK_Halls_Chiefs" FromRole="Halls" ToRole="Chiefs" />
+          <NavigationProperty Name="Departments" Relationship="Model.FK_Halls_Departments" FromRole="Halls" ToRole="Departments" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Units">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Departments" Relationship="Model.FK_Departments_Units" FromRole="Units" ToRole="Departments" />
+        </EntityType>
+        <Association Name="FK_Halls_Buildings">
+          <End Type="Model.Buildings" Role="Buildings" Multiplicity="1" />
+          <End Type="Model.Halls" Role="Halls" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Buildings">
+              <PropertyRef Name="Kadastr" />
+            </Principal>
+            <Dependent Role="Halls">
+              <PropertyRef Name="BuildingID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Departments_Chiefs">
+          <End Type="Model.Chiefs" Role="Chiefs" Multiplicity="1" />
+          <End Type="Model.Departments" Role="Departments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chiefs">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Departments">
+              <PropertyRef Name="ChiefID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Halls_Chiefs">
+          <End Type="Model.Chiefs" Role="Chiefs" Multiplicity="1" />
+          <End Type="Model.Halls" Role="Halls" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chiefs">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Halls">
+              <PropertyRef Name="ChiefID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Departments_Units">
+          <End Type="Model.Units" Role="Units" Multiplicity="1" />
+          <End Type="Model.Departments" Role="Departments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Units">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Departments">
+              <PropertyRef Name="UnitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Halls_Departments">
+          <End Type="Model.Departments" Role="Departments" Multiplicity="1" />
+          <End Type="Model.Halls" Role="Halls" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departments">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Halls">
+              <PropertyRef Name="DepartmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище ModelContainer" CdmEntityContainer="Entity">
+          <EntitySetMapping Name="Buildings">
+            <EntityTypeMapping TypeName="Model.Buildings">
+              <MappingFragment StoreEntitySet="Buildings">
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Picture" ColumnName="Picture" />
+                <ScalarProperty Name="Flow" ColumnName="Flow" />
+                <ScalarProperty Name="Wear" ColumnName="Wear" />
+                <ScalarProperty Name="Material" ColumnName="Material" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Land" ColumnName="Land" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Kadastr" ColumnName="Kadastr" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Chiefs">
+            <EntityTypeMapping TypeName="Model.Chiefs">
+              <MappingFragment StoreEntitySet="Chiefs">
+                <ScalarProperty Name="Experience" ColumnName="Experience" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Departments">
+            <EntityTypeMapping TypeName="Model.Departments">
+              <MappingFragment StoreEntitySet="Departments">
+                <ScalarProperty Name="Period" ColumnName="Period" />
+                <ScalarProperty Name="CostAfter" ColumnName="CostAfter" />
+                <ScalarProperty Name="CostYear" ColumnName="CostYear" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="DateStart" ColumnName="DateStart" />
+                <ScalarProperty Name="UnitID" ColumnName="UnitID" />
+                <ScalarProperty Name="ChiefID" ColumnName="ChiefID" />
+                <ScalarProperty Name="OfficeDean" ColumnName="OfficeDean" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Boss" ColumnName="Boss" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Halls">
+            <EntityTypeMapping TypeName="Model.Halls">
+              <MappingFragment StoreEntitySet="Halls">
+                <ScalarProperty Name="ChiefID" ColumnName="ChiefID" />
+                <ScalarProperty Name="BuildingID" ColumnName="BuildingID" />
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+                <ScalarProperty Name="Target" ColumnName="Target" />
+                <ScalarProperty Name="Heating" ColumnName="Heating" />
+                <ScalarProperty Name="Windows" ColumnName="Windows" />
+                <ScalarProperty Name="Square" ColumnName="Square" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="Model.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Units">
+            <EntityTypeMapping TypeName="Model.Units">
+              <MappingFragment StoreEntitySet="Units">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

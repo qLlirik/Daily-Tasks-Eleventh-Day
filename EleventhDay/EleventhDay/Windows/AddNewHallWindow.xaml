@@ -1,0 +1,46 @@
+﻿<Window x:Class="EleventhDay.Windows.AddNewHallWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EleventhDay.Windows"
+        mc:Ignorable="d"
+        Title="Учёт имущества института - Добавление нового помещения" FontSize="16" Background="Lavender" Height="600" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid>
+        <Button Click="click_Back" Content="Назад" Width="100" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5"/>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="10">
+                <TextBlock Text="      Выбор кафедры: " VerticalAlignment="Center"/>
+                <ComboBox x:Name="cbxDepartments" Width="300" IsEditable="True"/>
+                <Button Click="click_AddNewDepartment" Content="Добавить новую кафедру" Margin=" 10 0 0 0" Width="250"/>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="10">
+                <TextBlock Text="Выбор мат. отв-ого: " VerticalAlignment="Center"/>
+                <ComboBox x:Name="cbxChiefs" Width="300" IsEditable="True"/>
+                <Button Click="click_AddNewChief" Content="Добавить нового мат. отв-ого" Margin=" 10 0 0 0" Width="250"/>
+            </StackPanel>
+
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="10">
+                <TextBlock Text="                       Площадь: "/>
+                <TextBox x:Name="tbxSquare" Width="200" MaxLength="10"/>
+            </StackPanel>
+
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="10">
+                <TextBlock Text="                    Кол-о окон: "/>
+                <TextBox x:Name="tbxWindows" Width="200" MaxLength="1"/>
+            </StackPanel>
+
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="10">
+                <TextBlock Text="Число эл-ов в батареях: "/>
+                <TextBox x:Name="tbxHeating" Width="200" MaxLength="3"/>
+            </StackPanel>
+
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="10">
+                <TextBlock Text="                   Назначение: "/>
+                <TextBox x:Name="tbxTarget" Width="200" MaxLength="15"/>
+            </StackPanel>
+            
+            <Button Click="click_Add" Content="Добавить" Margin="10" Width="300"/>
+        </StackPanel>
+    </Grid>
+</Window>
