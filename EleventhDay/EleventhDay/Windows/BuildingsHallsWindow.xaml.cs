@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Data.OleDb;
 using System.Data;
 using System.Text;
+using System.Xml;
 
 namespace EleventhDay.Windows
 {
@@ -141,7 +142,7 @@ namespace EleventhDay.Windows
 
                             foreach(var i in Halls)
                             {
-                                cmd.CommandText = "INSERT INTO [Halls] (ID,Square,Windows,Heating,Target,DepartmentID,BuildingID,ChiefID) values ('" + i.ID + "', '" + i.Square + "', '" + i.Windows + "', '" + i.Heating + "', '" + i.Target + "', '" + i.DepartmentID + "', '" + i.BuildingID + "', '" + i.ChiefID + "';";
+                                cmd.CommandText = "INSERT INTO [Halls] (ID,Square,Windows,Heating,Target,DepartmentID,BuildingID,ChiefID) values ('" + i.ID + "', '" + i.Square + "', '" + i.Windows + "', '" + i.Heating + "', '" + i.Target + "', '" + i.DepartmentID + "', '" + i.BuildingID + "', '" + i.ChiefID + "')";
                                 cmd.ExecuteNonQuery(); 
                             }
                             conn.Close();
@@ -230,39 +231,107 @@ namespace EleventhDay.Windows
                         }
                     case 1:
                         {
+                            if (System.Windows.MessageBox.Show("Для удачной записи в файле не должно быть поле 'ID'. Продолжить? ", "Caution", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                            {
+                                pp.IsOpen = true;
+                                return;
+                            }
+                            OpenFileDialog ofd = new OpenFileDialog();
+                            ofd.Filter = "XML|*.xml;";
+                            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+                            {
+                                pp.IsOpen = true;
+                                return;
+                            }
 
+                            int GoodCount = 0;
+                            int BadCount = 0;
+
+                            XmlDocument doc = new XmlDocument();
+                            doc.Load(ofd.FileName);
+
+                            foreach (XmlNode i in doc.DocumentElement)
+                            {
+                                try
+                                {
+                                    DB.Halls hall = new DB.Halls();
+                                    hall.ID = int.Parse(i["ID"].InnerText);
+                                    hall.Square = double.Parse(i["Square"].InnerText);
+                                    hall.Windows = int.Parse(i["Windows"].InnerText);
+                                    hall.Heating = int.Parse(i["Heating"].InnerText);
+                                    hall.Target = i["Target"].InnerText;
+                                    hall.DepartmentID = int.Parse(i["Department"].InnerText);
+                                    hall.BuildingID = HelpClasses.StaticClass.SelectBuilding.Kadastr;
+                                    hall.ChiefID = int.Parse(i["Chief"].InnerText);
+
+                                    db.Halls.Add(hall);
+                                    db.SaveChanges();
+
+                                    GoodCount++;
+                                }
+                                catch
+                                {
+                                    BadCount++;
+                                }
+                            }
+
+                            string Message = "";
+                            if (BadCount == 0)
+                                Message = "Импорт прошёл успешно!";
+                            else if (GoodCount != 0)
+                                Message = "Импорт прошёл с некоторыми ошибками!";
+                            else
+                                Message = "Импорт не прошёл из-за появившихся ошибок!";
+                            System.Windows.MessageBox.Show(Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                            break;
+                        }
+                    case 2:
+                        {
+                            OpenFileDialog ofd = new OpenFileDialog();
+                            ofd.Filter = "XLS|*.xls;";
+                            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+                            {
+                                pp.IsOpen = true;
+                                return;
+                            }
+
+                            DataSet ds = new DataSet();
+
+                            string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Extended properties=Excel 8.0; User ID=;Password=;Data Source = " + ofd.FileName;
+                            OleDbConnection conn = new OleDbConnection(connectionString);
+
+                            conn.Open();
+                            OleDbCommand cmd = new OleDbCommand();
+                            cmd.Connection = conn;
+
+                            DataTable dtHalls = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+
+                            foreach(DataRow dr in dtHalls.Rows)
+                            {
+                                string hallName = dr["TABLE_NAME"].ToString();
+
+                                if (!hallName.EndsWith("$"))
+                                    continue;
+
+                                cmd.CommandText = "SELECT * FROM [" + hallName + "]";
+
+                                DataTable dt = new DataTable();
+                                dt.TableName = hallName;
+
+                                OleDbDataAdapter da = new OleDbDataAdapter();
+                                da.Fill(dt);
+
+                                ds.Tables.Add(dt);
+                            }
+
+                            cmd = null;
+                            conn.Close();
                             break;
                         }
                 }
                 click_Sort(null,null);
             }
 
-        }
-        private string GetConnectionString()
-        {
-            Dictionary<string, string> props = new Dictionary<string, string>();
-
-            // XLSX - Excel 2007, 2010, 2012, 2013
-            props["Provider"] = "Microsoft.ACE.OLEDB.12.0;";
-            props["Extended Properties"] = "Excel 12.0 XML";
-            props["Data Source"] = "C:\\MyExcel.xlsx";
-
-            // XLS - Excel 2003 and Older
-            //props["Provider"] = "Microsoft.Jet.OLEDB.4.0";
-            //props["Extended Properties"] = "Excel 8.0";
-            //props["Data Source"] = "C:\\MyExcel.xls";
-
-            StringBuilder sb = new StringBuilder();
-
-            foreach (KeyValuePair<string, string> prop in props)
-            {
-                sb.Append(prop.Key);
-                sb.Append('=');
-                sb.Append(prop.Value);
-                sb.Append(';');
-            }
-
-            return sb.ToString();
         }
     }
 }
